@@ -1,5 +1,6 @@
 const Product =require('../models/Product')
 const ErrorHandler =require('../utils/ErrorHandler')
+const APIfeature =require('../utils/APIfeature')
 const catchAsyncErrors =require('../middleware/catchAsyncError')
 
 // create  product ========Admin
@@ -17,7 +18,8 @@ exports.createProduct =catchAsyncErrors(async(req,res,next)=>{
 
 //getAllProduct
 exports.getAllProducts =async(req,res,next) =>{
-    const products =await Product.find()
+    const feature = new APIfeature(Product.find(),req.query).search()
+    const products =await feature.query
     res.status(200).json({
         success:true,
         products
@@ -26,18 +28,18 @@ exports.getAllProducts =async(req,res,next) =>{
 
 // update product ------admin
 exports.updateProduct =async(req,res,next) =>{
-    const product =await Product.findById(req.params.id)
+    let product =await Product.findById(req.params.id)
     if(!product){
         return next(new ErrorHandler('Product is not found with this id',404))
     }
-    product =await Product.findByIdAndUpdate(req.params.id,req.body,{
+    const newproduct =await Product.findOneAndUpdate({_id:req.params.id},req.body,{
         new:true,
         runValidators:true,
         useUnified:false
     })
     res.status(200).json({
         success:true,
-        product
+        newproduct
     })
  }
 
