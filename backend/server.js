@@ -4,11 +4,13 @@ const database =require('./database/db')
 //port Number
  const port =process.env.PORT || 5000
 
-//  // Handling uncaught Exception
-// process.on("uncaughtException",(err) =>{
-//     console.log(`Error: ${err.message}`);
-//     console.log(`Shutting down the server for Handling uncaught Exception`);
-// })
+// Handling uncaught Exception
+  process.on("uncaughtException",(err) =>{
+      console.log(`Error: ${err.message}`);
+      console.log(`Shutting down the server for Handling uncaught Exception`);
+  })
+
+
  // create server
  const server =app.listen(port, () => {
      console.log(`server is working on http://localhost:${port}/`);
